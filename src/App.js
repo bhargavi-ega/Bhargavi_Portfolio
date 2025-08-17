@@ -190,7 +190,7 @@ function App() {
       author: 'Kavita Tummagunta',
       title: 'Front-End Developer',
       company: 'Tata Consultancy Services',
-      avatar: '/kavitha.jpeg',
+      avatar: '/Kavitha.jpeg',
     },
     {
       id: 4,
@@ -210,7 +210,7 @@ function App() {
       author: 'Sahithi Mattagunja',
       title: 'Senior Engineer',
       company: 'Tata Consultancy Services',
-      avatar: '/Sahithi.jpeg',
+      avatar: '/sahithi.jpeg',
     },
     {
       id: 6,
