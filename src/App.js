@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './App.css'; // We'll add the new CSS for the loader here
+import './App.css';
 
 // Component to handle lazy loading of sections
 const LazySection = ({ children, id }) => {
@@ -11,13 +11,13 @@ const LazySection = ({ children, id }) => {
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-          observer.unobserve(entry.target); // Stop observing once visible
+          observer.unobserve(entry.target);
         }
       },
       {
-        root: null, // viewport
+        root: null,
         rootMargin: '0px',
-        threshold: 0.1, // Trigger when 10% of the section is visible
+        threshold: 0.1,
       }
     );
 
@@ -58,13 +58,18 @@ const TriangleLoader = () => {
   );
 };
 
-
 // Main App component
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [currentTestimonialIndex, setCurrentTestimonialIndex] = useState(0);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
+  const [touchStartX, setTouchStartX] = useState(0);
+
+  const testimonialContainerRef = useRef(null);
 
   useEffect(() => {
+    document.title = "Bhargavi's Portfolio";
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 1000);
@@ -85,7 +90,7 @@ function App() {
         'Company portal',
         'Placement tracking',
       ],
-      liveLink: 'https://www.tcsion.com/hub/psp/graduate-engineer-trainee-it/', 
+      liveLink: 'https://www.tcsion.com/hub/psp/graduate-engineer-trainee-it/',
     },
     {
       id: 2,
@@ -96,7 +101,7 @@ function App() {
       keyFeatures: [
         'Course management system',
         'Student dashboard',
-        'Assignment submission portal',
+        'Assessment portal',
         'Certificate generation',
       ],
       liveLink: 'https://www.tcsion.com/hub/iit-kgp-certificate-program/hands-on-approach-to-advanced-ai/',
@@ -178,9 +183,9 @@ function App() {
         "Working with Bhargavi was a pleasure. Her attention to detail and proactive approach to problem-solving significantly improved our team's efficiency. She consistently delivers high-quality, maintainable code.",
       shortQuote: 'Attention to detail and proactive problem-solving improved efficiency.',
       author: 'Mounika Vangali',
-      title: 'Front-End Developer',
+      title: 'Assistant System Engineer',
       company: 'Ex-TCSer',
-      avatar: '/Mounika.jpeg',
+      avatar: '/Mounika.jpg',
     },
     {
       id: 3,
@@ -190,7 +195,7 @@ function App() {
       author: 'Kavita Tummagunta',
       title: 'Front-End Developer',
       company: 'Tata Consultancy Services',
-      avatar: '/Kavitha.jpeg',
+      avatar: '/kavitha.jpeg',
     },
     {
       id: 4,
@@ -224,6 +229,22 @@ function App() {
     },
   ];
 
+  useEffect(() => {
+    let interval;
+    if (!isHovering && !isMenuOpen) {
+      interval = setInterval(() => {
+        setCurrentTestimonialIndex((prevIndex) =>
+          prevIndex === testimonials.length - 1 ? 0 : prevIndex + 1
+        );
+      }, 1000); // Changed to 1 second for faster movement
+    }
+    return () => clearInterval(interval);
+  }, [isHovering, isMenuOpen, testimonials.length]);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   const nextTestimonial = () => {
     setCurrentTestimonialIndex((prevIndex) =>
       prevIndex === testimonials.length - 1 ? 0 : prevIndex + 1
@@ -240,6 +261,20 @@ function App() {
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
+      setIsMenuOpen(false);
+    }
+  };
+
+  const handleTouchStart = (e) => {
+    setTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e) => {
+    const touchEndX = e.changedTouches[0].clientX;
+    if (touchStartX - touchEndX > 50) {
+      nextTestimonial();
+    } else if (touchEndX - touchStartX > 50) {
+      prevTestimonial();
     }
   };
 
@@ -257,14 +292,14 @@ function App() {
         <div className="container mx-auto flex justify-between items-center px-4 sm:px-6 lg:px-8">
           <a
             href="#"
-            className="text-xl font-bold text-teal-400 hover:text-teal-300 transition-colors duration-300"
+            className="text-xl font-bold text-teal-400 hover-underline flex items-center transition-colors duration-300"
           >
             &lt;Bhargavi Ega /&gt;
           </a>
           <div className="hidden md:flex space-x-6">
-            <button
+            <a
               onClick={() => handleScrollToSection('about')}
-              className="text-gray-300 hover:text-white transition-colors duration-300 font-medium flex items-center"
+              className="text-gray-300 hover-underline font-medium flex items-center"
             >
               <svg
                 className="w-5 h-5 mr-1"
@@ -280,11 +315,11 @@ function App() {
                   d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                 ></path>
               </svg>
-              About
-            </button>
-            <button
+              <span>About</span>
+            </a>
+            <a
               onClick={() => handleScrollToSection('skills')}
-              className="text-gray-300 hover:text-white transition-colors duration-300 font-medium flex items-center"
+              className="text-gray-300 hover-underline font-medium flex items-center"
             >
               <svg
                 className="w-5 h-5 mr-1"
@@ -300,11 +335,11 @@ function App() {
                   d="M13 10V3L4 14h7v7l9-11h-7z"
                 ></path>
               </svg>
-              Skills
-            </button>
-            <button
+              <span>Skills</span>
+            </a>
+            <a
               onClick={() => handleScrollToSection('projects')}
-              className="text-gray-300 hover:text-white transition-colors duration-300 font-medium flex items-center"
+              className="text-gray-300 hover-underline font-medium flex items-center"
             >
               <svg
                 className="w-5 h-5 mr-1"
@@ -320,11 +355,11 @@ function App() {
                   d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7m-4 0v-2a2 2 0 00-2-2h-4a2 2 0 00-2 2v2M3 7h18"
                 ></path>
               </svg>
-              Projects
-            </button>
-            <button
+              <span>Projects</span>
+            </a>
+            <a
               onClick={() => handleScrollToSection('testimonials')}
-              className="text-gray-300 hover:text-white transition-colors duration-300 font-medium flex items-center"
+              className="text-gray-300 hover-underline font-medium flex items-center"
             >
               <svg
                 className="w-5 h-5 mr-1"
@@ -340,13 +375,13 @@ function App() {
                   d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.105A9.702 9.702 0 0112 4c4.97 0 9 3.582 9 8z"
                 ></path>
               </svg>
-              Testimonials
-            </button>
+              <span>Testimonials</span>
+            </a>
             <a
               href="/Ega-Bhargavi-Resume.pdf"
-              target="_blank" // This attribute opens the link in a new tab
-              rel="noopener noreferrer" // This is a security best practice
-              className="text-gray-300 hover:text-white transition-colors duration-300 font-medium flex items-center"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-300 hover-underline font-medium flex items-center"
             >
               <svg
                 className="w-5 h-5 mr-1"
@@ -362,11 +397,11 @@ function App() {
                   d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 4h2a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2m8 0V2m0 2a2 2 0 012 2v2m-6-2v2m0-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2m0 0h.01M12 12h.01"
                 ></path>
               </svg>
-              Resume
+              <span>Resume</span>
             </a>
-            <button
+            <a
               onClick={() => handleScrollToSection('contact')}
-              className="text-gray-300 hover:text-white transition-colors duration-300 font-medium flex items-center"
+              className="text-gray-300 hover-underline font-medium flex items-center"
             >
               <svg
                 className="w-5 h-5 mr-1"
@@ -382,11 +417,11 @@ function App() {
                   d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-18 4v7a2 2 0 002 2h14a2 2 0 002-2v-7"
                 ></path>
               </svg>
-              Contact
-            </button>
+              <span>Contact</span>
+            </a>
           </div>
           <div className="md:hidden">
-            <button className="text-gray-300 hover:text-white">
+            <button onClick={toggleMenu} className="text-gray-300 hover:text-white">
               <svg
                 className="w-6 h-6"
                 fill="none"
@@ -400,6 +435,46 @@ function App() {
           </div>
         </div>
       </nav>
+
+      {isMenuOpen && (
+        <div className="fixed inset-0 z-40 bg-gray-900 bg-opacity-95 backdrop-blur-md flex flex-col items-center justify-center space-y-6 md:hidden">
+          <button onClick={toggleMenu} className="absolute top-4 right-4 text-white">
+            <svg
+              className="w-8 h-8"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+          <button onClick={() => handleScrollToSection('about')} className="text-gray-300 text-3xl font-bold hover:text-white transition-colors duration-300">
+            About
+          </button>
+          <button onClick={() => handleScrollToSection('skills')} className="text-gray-300 text-3xl font-bold hover:text-white transition-colors duration-300">
+            Skills
+          </button>
+          <button onClick={() => handleScrollToSection('projects')} className="text-gray-300 text-3xl font-bold hover:text-white transition-colors duration-300">
+            Projects
+          </button>
+          <button onClick={() => handleScrollToSection('testimonials')} className="text-gray-300 text-3xl font-bold hover:text-white transition-colors duration-300">
+            Testimonials
+          </button>
+          <a
+            href="/Ega-Bhargavi-Resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={toggleMenu}
+            className="text-gray-300 text-3xl font-bold hover:text-white transition-colors duration-300"
+          >
+            Resume
+          </a>
+          <button onClick={() => handleScrollToSection('contact')} className="text-gray-300 text-3xl font-bold hover:text-white transition-colors duration-300">
+            Contact
+          </button>
+        </div>
+      )}
 
       <main className="pt-16">
         <section id="hero" className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
@@ -423,8 +498,8 @@ function App() {
               </button>
               <a
                 href="/Ega-Bhargavi-Resume.pdf"
-                target="_blank" // This attribute opens the link in a new tab
-                rel="noopener noreferrer" // This is a security best practice
+                target="_blank"
+                rel="noopener noreferrer"
                 download="Bhargavi_Ega_Resume.pdf"
                 className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 inline-flex items-center"
               >
@@ -507,7 +582,7 @@ function App() {
         </section>
 
         <LazySection id="about">
-          <section className="py-16 bg-gray-800 border-t border-gray-700">
+          <section className="py-16 bg-gray-900 border-t border-gray-700 dot-bg-1">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
               <h2 className="text-4xl font-bold text-center text-white mb-12">About Me</h2>
               <div className="flex flex-col md:flex-row items-center gap-10">
@@ -543,7 +618,7 @@ function App() {
         </LazySection>
 
         <LazySection id="skills">
-          <section className="py-16 bg-gray-900 border-t border-gray-700">
+          <section className="py-16 bg-gray-900 border-t border-gray-700 dot-bg-2">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
               <h2 className="text-4xl font-bold text-center text-white mb-12">My Skills</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -635,7 +710,7 @@ function App() {
         </LazySection>
 
         <LazySection id="projects">
-          <section className="py-16 bg-gray-800 border-t border-gray-700">
+          <section className="py-16 bg-gray-900 border-t border-gray-700 dot-bg-3">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
               <h2 className="text-4xl font-bold text-center text-white mb-12">My Projects</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -683,7 +758,7 @@ function App() {
                             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
                             </svg>
-                            
+                            View Live Demo
                           </a>
                         ) : (
                           <a
@@ -706,111 +781,82 @@ function App() {
         </LazySection>
 
         <LazySection id="testimonials">
-          <section className="py-16 bg-gradient-to-br from-gray-900 to-gray-800 border-t border-gray-700 text-gray-200">
+          <section className="py-16 bg-gray-900 border-t border-gray-700">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
               <h2 className="text-4xl font-bold text-center text-white mb-4">Voices That Inspire</h2>
               <p className="text-center text-gray-300 mb-12">
                 Hear directly from those who’ve collaborated with me - their words say it best.
               </p>
-
-              <div className="relative max-w-3xl mx-auto">
-                <div className="bg-gray-800 p-8 rounded-lg shadow-xl border border-gray-700 w-full transition-all duration-500 ease-in-out">
-                  {testimonials.length > 0 && (
-                    <div key={currentTestimonialIndex} className="animate-fade-in">
-                      <div className="flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-8">
-                        <div className="flex-shrink-0 w-32 h-32 rounded-full overflow-hidden border-4 border-teal-500 shadow-lg">
-                          <img
-                            src={testimonials[currentTestimonialIndex].avatar}
-                            alt={testimonials[currentTestimonialIndex].author}
-                            className="w-full h-full object-cover no-download-image"
-                            onContextMenu={(e) => e.preventDefault()}
-                          />
-                        </div>
-                        <div className="flex-grow relative">
-                          <span className="absolute -top-4 left-0 text-7xl font-bold text-teal-600 opacity-20 transform -translate-x-1/4 -translate-y-1/4">
-                            “
-                          </span>
-                          <blockquote className="text-xl sm:text-2xl italic text-gray-100 mb-4 leading-relaxed pt-4">
-                            "{testimonials[currentTestimonialIndex].quote}"
-                          </blockquote>
-                          <p className="font-semibold text-white text-lg">
-                            {testimonials[currentTestimonialIndex].author}
-                          </p>
-                          <p className="text-md text-gray-400">
-                            {testimonials[currentTestimonialIndex].title},{' '}
-                            {testimonials[currentTestimonialIndex].company}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                  {testimonials.length === 0 && (
-                    <p className="text-gray-400">No testimonials to display yet. Add some to the 'testimonials' array!</p>
-                  )}
-                </div>
-
+              <div
+                onMouseEnter={() => setIsHovering(true)}
+                onMouseLeave={() => setIsHovering(false)}
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
+                className="relative overflow-hidden"
+              >
+                {/* Navigation Buttons */}
                 <button
                   onClick={prevTestimonial}
-                  className="absolute -left-12 top-1/2 -translate-y-1/2 bg-teal-600 hover:bg-teal-700 text-white p-3 rounded-full shadow-md transition-transform duration-300 transform hover:scale-110 focus:outline-none z-20 hidden md:block"
+                  className="testimonial-nav-btn left-0 absolute top-1/2 -translate-y-1/2 p-3 rounded-full shadow-md transition-transform duration-300 transform hover:scale-110 focus:outline-none z-20 text-teal-400 hover:bg-teal-500 hover:text-white hidden md:block"
                   aria-label="Previous Testimonial"
                 >
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <polyline points="15 18 9 12 15 6"></polyline>
                   </svg>
                 </button>
                 <button
                   onClick={nextTestimonial}
-                  className="absolute -right-12 top-1/2 -translate-y-1/2 bg-teal-600 hover:bg-teal-700 text-white p-3 rounded-full shadow-md transition-transform duration-300 transform hover:scale-110 focus:outline-none z-20 hidden md:block"
+                  className="testimonial-nav-btn right-0 absolute top-1/2 -translate-y-1/2 p-3 rounded-full shadow-md transition-transform duration-300 transform hover:scale-110 focus:outline-none z-20 text-teal-400 hover:bg-teal-500 hover:text-white hidden md:block"
                   aria-label="Next Testimonial"
                 >
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <polyline points="9 18 15 12 9 6"></polyline>
                   </svg>
                 </button>
+                
+                <div
+                  className="testimonial-wrapper flex transition-transform duration-300 ease-in-out"
+                  style={{ transform: `translateX(-${currentTestimonialIndex * 100}%)` }}
+                >
+                  {testimonials.map((testimonial, index) => (
+                    <div key={index} className="testimonial-card flex-shrink-0 w-full px-4">
+                      <div className="p-6 sm:p-8 rounded-lg shadow-xl w-full h-full flex flex-col items-center text-center transition-all duration-300 bg-gray-800 border-4 border-transparent hover:border-teal-500">
+                        <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-teal-500 shadow-lg mb-6">
+                          <img
+                            src={testimonial.avatar}
+                            alt={testimonial.author}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div className="relative mb-6">
+                          <span className="absolute left-0 -top-6 text-7xl font-bold text-teal-600 opacity-20 transform -translate-x-1/4 -translate-y-1/2">
+                            “
+                          </span>
+                          <blockquote className="text-lg sm:text-xl italic text-gray-100 leading-relaxed pt-4">
+                            "{testimonial.quote}"
+                          </blockquote>
+                        </div>
+                        <div className="flex-grow">
+                          <p className="font-semibold text-white text-md sm:text-lg">{testimonial.author}</p>
+                          <p className="text-sm text-gray-400">{testimonial.title}, {testimonial.company}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
 
-                <div className="flex justify-center gap-4 mt-8 md:hidden">
-                  <button
-                    onClick={prevTestimonial}
-                    className="bg-teal-600 hover:bg-teal-700 text-white p-3 rounded-full shadow-md transition-transform duration-300 transform hover:scale-110 focus:outline-none"
-                    aria-label="Previous Testimonial"
-                  >
-                    <svg
-                      className="w-6 h-6"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path>
-                    </svg>
-                  </button>
-                  <button
-                    onClick={nextTestimonial}
-                    className="bg-teal-600 hover:bg-teal-700 text-white p-3 rounded-full shadow-md transition-transform duration-300 transform hover:scale-110 focus:outline-none"
-                    aria-label="Next Testimonial"
-                  >
-                    <svg
-                      className="w-6 h-6"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                  </button>
+                {/* Pagination Dots */}
+                <div className="absolute bottom-4 flex justify-center space-x-2 w-full">
+                  {testimonials.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentTestimonialIndex(index)}
+                      className={`h-3 w-3 rounded-full transition-colors duration-300 ${
+                        index === currentTestimonialIndex ? 'bg-teal-400' : 'bg-gray-500 hover:bg-teal-300'
+                      }`}
+                      aria-label={`Go to testimonial ${index + 1}`}
+                    ></button>
+                  ))}
                 </div>
               </div>
             </div>
@@ -818,7 +864,7 @@ function App() {
         </LazySection>
 
         <LazySection id="contact">
-          <section className="py-16 bg-gray-800 border-t border-gray-700">
+          <section className="py-16 bg-gray-900 border-t border-gray-700 dot-bg-1">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl text-center">
               <h2 className="text-4xl font-bold text-white mb-8">Get In Touch</h2>
               <p className="text-lg text-gray-300 mb-10">
@@ -891,99 +937,99 @@ function App() {
       </main>
       <style>
         {`
-          @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+          html, body {
+            overflow-x: hidden;
           }
-          @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-          }
-          .animate-fade-in {
-            animation: fadeIn 1s ease-out;
-          }
-          .animate-fade-in-up {
-            animation: fadeInUp 0.8s ease-out;
-          }
-          .delay-100 { animation-delay: 0.1s; }
-          .delay-200 { animation-delay: 0.2s; }
-          .delay-300 { animation-delay: 0.3s; }
-          .delay-400 { animation-delay: 0.4s; }
-          .delay-500 { animation-delay: 0.5s; }
-          .delay-600 { animation-delay: 0.6s; }
-          .delay-700 { animation-delay: 0.7s; }
-          .no-download-image {
-            pointer-events: none;
+          
+          .testimonial-container {
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            touch-action: pan-y;
+            -webkit-touch-callout: none;
             user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
+            padding: 0 4rem; /* Added padding to prevent clipping */
+            box-sizing: border-box;
+          }
+          
+          .testimonial-wrapper {
+            display: flex;
+            transition: transform 0.3s ease-in-out;
+          }
+          
+          .testimonial-card {
+            flex: 0 0 100%;
+            padding: 1rem;
+            box-sizing: border-box;
+          }
+          
+          .testimonial-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            cursor: pointer;
+            padding: 0.5rem;
+            background-color: rgba(30, 41, 59, 0.8);
+            border-radius: 9999px;
+            border: 1px solid #4FD1C5;
+            color: #4FD1C5;
+            transition: all 0.3s ease;
+          }
+          
+          .testimonial-nav-btn:hover {
+            transform: translateY(-50%) scale(1.1);
+            background-color: #4FD1C5;
+            color: white;
+          }
+          
+          .testimonial-nav-btn.left { left: 1rem; }
+          .testimonial-nav-btn.right { right: 1rem; }
+          
+          .pagination-dots {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+            width: 100%;
+          }
+          
+          .pagination-dot {
+            height: 0.75rem;
+            width: 0.75rem;
+            margin: 0 0.25rem;
+            border-radius: 9999px;
+            background-color: #6B7280;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+          }
+          
+          .pagination-dot.active {
+            background-color: #4FD1C5;
+          }
+          
+          .hover-underline {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            transition: color 0.3s ease;
+            text-decoration: none;
           }
 
-          /* Triangle Loader Styles */
-          .loader-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #0d1117; /* Matches the dark background */
-            z-index: 9999;
-          }
-          .triangle-loader {
-            position: relative;
-            width: 80px;
-            height: 80px;
-            animation: rotate 2s linear infinite;
-          }
-          .dot {
+          .hover-underline::after {
+            content: '';
             position: absolute;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background-color: #4FD1C5; /* Teal color */
-            animation: dot-move 2s ease-in-out infinite;
-          }
-          .dot-1 {
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            animation-delay: 0s;
-          }
-          .dot-2 {
-            bottom: 0;
             left: 0;
-            animation-delay: 0.5s;
+            bottom: -2px;
+            width: 100%;
+            height: 2px;
+            background-color: #4FD1C5;
+            transform: scaleX(0);
+            transform-origin: bottom right;
+            transition: transform 0.3s ease-out;
           }
-          .dot-3 {
-            bottom: 0;
-            right: 0;
-            animation-delay: 1s;
-          }
-          @keyframes rotate {
-            0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(180deg); }
-          }
-          @keyframes dot-move {
-            0%, 100% {
-              transform: translateX(0);
-              opacity: 1;
-            }
-            25% {
-              transform: translateY(70px) translateX(-35px);
-              opacity: 0.2;
-            }
-            50% {
-              transform: translateY(70px) translateX(35px);
-              opacity: 0.2;
-            }
-            75% {
-              transform: translateY(0);
-              opacity: 1;
-            }
+          .hover-underline:hover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
           }
         `}
       </style>
