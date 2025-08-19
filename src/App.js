@@ -522,7 +522,7 @@ function App() {
             </div>
             <div className="flex justify-center items-center gap-6 mt-8 animate-fade-in-up delay-700">
               <a
-                href="https://github.com/bhargaviega"
+                href="https://github.com/bhargavi-ega"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white transition-colors duration-300 transform hover:scale-110"
@@ -892,7 +892,7 @@ function App() {
                   Email Me
                 </a>
                 <a
-                  href="https://github.com/bhargaviega"
+                  href="https://github.com/bhargavi-ega"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="bg-gray-700 hover:bg-gray-600 text-gray-200 font-bold py-3 px-6 rounded-lg shadow-md transition-all duration-300 transform hover:scale-105 inline-flex items-center"
