@@ -168,7 +168,7 @@ function App() {
 
   const testimonials = [
     {
-      id: 1,
+      id: 4,
       quote:
         "I've had the chance to work with Bhargavi on several critical sprints. Even under tight deadlines, she remained focused, calm, and delivered results without compromising on quality.",
       shortQuote: 'Focused, calm, and delivered results without compromising on quality.',
@@ -188,7 +188,7 @@ function App() {
       avatar: '/Mounika.jpg',
     },
     {
-      id: 3,
+      id: 1,
       quote:
         "I was particularly impressed by Bhargavi's dedication to performance optimization. Her contributions led to a noticeable improvement in our application's loading times and overall user satisfaction.",
       shortQuote: 'Dedication to performance optimization led to noticeable improvements.',
@@ -198,7 +198,7 @@ function App() {
       avatar: '/Kavitha.jpeg',
     },
     {
-      id: 4,
+      id: 6,
       quote:
         "Bhargavi's ability to quickly grasp complex requirements and translate them into elegant front-end solutions is truly remarkable. A valuable asset to any team.",
       shortQuote: 'Quickly grasps complex requirements and translates them into elegant solutions.',
@@ -218,7 +218,7 @@ function App() {
       avatar: '/sahithi.jpeg',
     },
     {
-      id: 6,
+      id: 3,
       quote:
         'Bhargavi consistently exceeded expectations, delivering robust and user-friendly features. Her technical expertise and dedication are top-notch.',
       shortQuote: 'Exceeded expectations, delivering robust and user-friendly features.',
