@@ -168,14 +168,14 @@ function App() {
 
   const testimonials = [
     {
-      id: 4,
+      id: 1,
       quote:
-        "I've had the chance to work with Bhargavi on several critical sprints. Even under tight deadlines, she remained focused, calm, and delivered results without compromising on quality.",
-      shortQuote: 'Focused, calm, and delivered results without compromising on quality.',
-      author: 'Omkar Raut',
-      title: 'Front-End developer',
+        "I was particularly impressed by Bhargavi's dedication to performance optimization. Her contributions led to a noticeable improvement in our application's loading times and overall user satisfaction.",
+      shortQuote: 'Dedication to performance optimization led to noticeable improvements.',
+      author: 'Kavita Tummagunta',
+      title: 'Front-End Developer',
       company: 'Tata Consultancy Services',
-      avatar: '/Omkar.jpeg',
+      avatar: '/Kavitha.jpeg',
     },
     {
       id: 2,
@@ -188,24 +188,24 @@ function App() {
       avatar: '/Mounika.jpg',
     },
     {
-      id: 1,
+      id: 3,
       quote:
-        "I was particularly impressed by Bhargavi's dedication to performance optimization. Her contributions led to a noticeable improvement in our application's loading times and overall user satisfaction.",
-      shortQuote: 'Dedication to performance optimization led to noticeable improvements.',
-      author: 'Kavita Tummagunta',
+        'Bhargavi consistently exceeded expectations, delivering robust and user-friendly features. Her technical expertise and dedication are top-notch.',
+      shortQuote: 'Exceeded expectations, delivering robust and user-friendly features.',
+      author: 'Akhila Myaka',
       title: 'Front-End Developer',
-      company: 'Tata Consultancy Services',
-      avatar: '/Kavitha.jpeg',
+      company: 'Ex-TCSer',
+      avatar: '/Akhila.jpeg',
     },
     {
-      id: 6,
+      id: 4,
       quote:
-        "Bhargavi's ability to quickly grasp complex requirements and translate them into elegant front-end solutions is truly remarkable. A valuable asset to any team.",
-      shortQuote: 'Quickly grasps complex requirements and translates them into elegant solutions.',
-      author: 'Navya Bitra',
-      title: 'Front-End Developer',
+        "I've had the chance to work with Bhargavi on several critical sprints. Even under tight deadlines, she remained focused, calm, and delivered results without compromising on quality.",
+      shortQuote: 'Focused, calm, and delivered results without compromising on quality.',
+      author: 'Omkar Raut',
+      title: 'Front-End developer',
       company: 'Tata Consultancy Services',
-      avatar: '/Navya.jpeg',
+      avatar: '/Omkar.jpeg',
     },
     {
       id: 5,
@@ -218,14 +218,14 @@ function App() {
       avatar: '/sahithi.jpeg',
     },
     {
-      id: 3,
+      id: 6,
       quote:
-        'Bhargavi consistently exceeded expectations, delivering robust and user-friendly features. Her technical expertise and dedication are top-notch.',
-      shortQuote: 'Exceeded expectations, delivering robust and user-friendly features.',
-      author: 'Akhila Myaka',
+        "Bhargavi's ability to quickly grasp complex requirements and translate them into elegant front-end solutions is truly remarkable. A valuable asset to any team.",
+      shortQuote: 'Quickly grasps complex requirements and translates them into elegant solutions.',
+      author: 'Navya Bitra',
       title: 'Front-End Developer',
-      company: 'Ex-TCSer',
-      avatar: '/Akhila.jpeg',
+      company: 'Tata Consultancy Services',
+      avatar: '/Navya.jpeg',
     },
   ];
 
